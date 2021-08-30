@@ -60,16 +60,30 @@ class UI {
 
 //* ==================== Local Storage Class
 class Store {
-    static getBook(){
-
+    static getBooks(){
+        // variable to hold our books
+        let books;
+        // if there is no books attribute on LS
+        if (localStorage.getItem('books' === null)){
+            books = []; // set books to an empty array
+        } else {
+            // set books array to the value of books from LS
+            books = JSON.parse(localStorage.getItem('books'));
+        };
+        return books;
     }
 
     static displayBooks(){
 
     }
 
-    static addBook(){
-
+    static addBook(book){
+        // use static method to to get our books 
+        const books = Store.getBooks();
+        // push new book to the books array
+        books.pash(book);
+        // set the updated array to local storage
+        localStorage.setItem('books', JSON.stringify(books));
     }
 
     static removeBook(){
