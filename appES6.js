@@ -1,15 +1,15 @@
 console.log(`RunningES6 script...`)
 
-//* ============ Book Class
+//* =============== Book Class
 class Book {
     constructor(title, author, isbn){
-        this.title - title;
+        this.title = title;
         this.author = author;
         this.isbn = isbn;
-    }
-}
+    };
+};
 
-//* ===== UI Class
+//* =============== UI Class
 class UI {
     addBookToList(book){
         const list = document.getElementById('book-list');
@@ -64,7 +64,7 @@ class Store {
         // variable to hold our books
         let books;
         // if there is no books attribute on LS
-        if (localStorage.getItem('books' === null)){
+        if (localStorage.getItem('books') === null){
             books = []; // set books to an empty array
         } else {
             // set books array to the value of books from LS
@@ -74,24 +74,53 @@ class Store {
     }
 
     static displayBooks(){
+        const books = Store.getBooks();
 
+        books.forEach(book => {
+            const ui = new UI;
+
+            //add book to list
+            ui.addBookToList(book);
+        })
     }
 
     static addBook(book){
         // use static method to to get our books 
         const books = Store.getBooks();
+        console.log(books);
         // push new book to the books array
-        books.pash(book);
+        books.push(book);
         // set the updated array to local storage
         localStorage.setItem('books', JSON.stringify(books));
     }
 
-    static removeBook(){
+    static removeBook(isbn){
+        // gets all books 
+        const books = Store.getBooks();
 
+        // iterate over books 
+        books.forEach((book, index) => {
+            // check if the isbn is the same as the isbn we passed in
+            if (book.isbn === isbn){
+                // splice 1 from the index of the book 
+                books.splice(index, 1)
+            }
+        });
+        // set the updated array to local storage
+        localStorage.setItem('books', JSON.stringify(books));
     }
-}
+};
 
-//* ==================== Events Listeners
+
+
+//* ======================================== Events Listeners
+
+
+// ==================== DOM Load Event
+document.addEventListener('DOMContentLoaded', Store.displayBooks)
+
+
+// ================= Book Form
 
 document.getElementById('book-form').addEventListener('submit', e => {
     e.preventDefault();
@@ -99,7 +128,7 @@ document.getElementById('book-form').addEventListener('submit', e => {
     const title = document.getElementById('title').value;
     const author = document.getElementById('author').value; 
     const isbn = document.getElementById('isbn').value;
-    console.log(title);
+    
     // Instantiate a book
     const book = new Book(title, author, isbn);
 
@@ -128,7 +157,12 @@ document.getElementById(`book-list`).addEventListener('click', e => {
     e.preventDefault();
     // Instantiate UI
     const ui = new UI();
+
+    // Delete book
     ui.deleteBook(e.target);
+
+    // Remove from LS
+    Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
 
     // Show alert
     ui.showAlert('Book removed', 'success')
