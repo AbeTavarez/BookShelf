@@ -12,7 +12,8 @@ class Book {
 //* =============== UI Class
 class UI {
     addBookToList(book){
-        const list = document.getElementById('book-list');
+        // gets book list
+        const bookList = document.getElementById('book-list');
         // Create tr element
         const row = document.createElement('tr');
         // Insert cols
@@ -22,7 +23,7 @@ class UI {
             <td>${book.isbn}</td>
             <td><a href="#" class="delete"> X </td>
         `;
-        list.appendChild(row);
+        bookList.appendChild(row);
     };
 
     showAlert(message, className){
